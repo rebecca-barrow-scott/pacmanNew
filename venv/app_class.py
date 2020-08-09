@@ -2,6 +2,7 @@ import pygame
 import sys
 
 from settings import *
+from map_class import *
 pygame.init()
 vector = pygame.math.Vector2
 
@@ -13,6 +14,7 @@ class App:
         self.state = 'intro'
         self.cell_width = maze_width//19
         self.cell_height = maze_height//21
+        self.map = Map(self)
         self.load()
 
 
@@ -91,4 +93,7 @@ class App:
         self.draw_text('CURRENT SCORE: 0', [110, 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('1 2 3', [width-110, 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
+        self.map.draw()
+        self.map.all_sprite_list.draw(self.background)
+
         pygame.display.update()
