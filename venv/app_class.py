@@ -16,8 +16,8 @@ class App:
         self.cell_width = maze_width//19
         self.cell_height = maze_height//21
         self.map = Map(self)
+        self.pacman = Player(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 11)+self.cell_height//2, self.cell_width, self.cell_height)
         self.load()
-
 
     def run(self):
         while self.running:
@@ -40,7 +40,7 @@ class App:
         font = pygame.font.SysFont(font_name, font_size)
         rend_text = font.render(text, False, color)
         text_size = rend_text.get_size()
-        pos[0] = pos[0]-text_size[0]//2
+        pos[0] = pos[0]-text_size[0] // 2
         pos[1] = pos[1] - text_size[1] // 2
         self.screen.blit(rend_text, pos)
 
@@ -82,18 +82,47 @@ class App:
             # quit the game
             if event.type == pygame.QUIT:
                 self.running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_LEFT:
+                    self.pacman.changeSpeed(-2, 0)
+                elif event.key == pygame.K_RIGHT:
+                    self.pacman.changeSpeed(2, 0)
+                elif event.key == pygame.K_UP:
+                    self.pacman.changeSpeed(0, -2)
+                elif event.key == pygame.K_DOWN:
+                    self.pacman.changeSpeed(0, 2)
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_LEFT:
+                    self.pacman.changeSpeed(2, 0)
+                elif event.key == pygame.K_RIGHT:
+                    self.pacman.changeSpeed(-2, 0)
+                elif event.key == pygame.K_UP:
+                    self.pacman.changeSpeed(0, 2)
+                elif event.key == pygame.K_DOWN:
+                    self.pacman.changeSpeed(0, -2)
 
     def playing_update(self):
-        pass
+        self.pacman.update()
 
     # creates the playing screen
     def playing_draw(self):
+        # DRAW BACKGROUND
         self.screen.fill(black)
         self.screen.blit(self.background, (border_padding//2, border_padding//2))
-        self.draw_grid()
-        self.draw_text('CURRENT SCORE: 0', [110, 15], intro_text_size_subtitle, white, intro_font)
+
+        # DRAW TEXT
+        self.draw_text('CURRENT SCORE: {score}'.format(score = self.pacman.score), [110, 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('1 2 3', [width-110, 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
+        # DRAW PLAYER
+        self.pacman.map = self.map.wall_list
+        self.pacman.fruit = self.map.fruit_list
+        self.map.all_sprite_list.add(self.pacman)
+        # DRAW MAP
         self.map.draw()
+        self.map.all_sprite_list.update()
+        self.background.fill(black)
+        self.draw_grid()
         self.map.all_sprite_list.draw(self.background)
-        pygame.display.update()
+        pygame.display.flip()

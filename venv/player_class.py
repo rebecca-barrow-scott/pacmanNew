@@ -1,57 +1,56 @@
 import pygame
-class Player(pygame.sprite.Sprite):
-    """ This class represents the bar at the bottom that the player
-    controls. """
+from settings import *
+from map_class import *
 
-    # Constructor function
-    def __init__(self, x, y):
-        # Call the parent's constructor
-        pygame.sprite.Sprite.__init__(self)
+class Player(pygame.sprite.DirtySprite):
+    def __init__(self, app, x, y, width, height, color=pacman_yellow):
+        pygame.sprite.DirtySprite.__init__(self)
+        self.image = pygame.Surface([width, height])
+        self.image.fill(color)
+        self.rect = self.image.get_rect(center=(x,y))
+        self.move = vector(0, 0)
+        self.app = app
+        self.map = None
+        self.fruit = None
+        self.score = 0
 
-        # Set height, width
-        self.image = pygame.Surface([15, 15])
-        self.image.fill(WHITE)
-
-        # Make our top-left corner the passed-in location.
-        self.rect = self.image.get_rect()
-        self.rect.y = y
-        self.rect.x = x
-
-        # Set speed vector
-        self.change_x = 0
-        self.change_y = 0
-        self.maps = None
-
-    def changespeed(self, x, y):
-        """ Change the speed of the player. """
-        self.change_x += x
-        self.change_y += y
+    def changeSpeed(self, x, y):
+        self.move.x += x
+        self.move.y += y
 
     def update(self):
-        """ Update the player position. """
-        # Move left/right
-        self.rect.x += self.change_x
+        # move the player in the direction of the arrow key
+        self.rect.x += self.move.x
+        self.rect.y += self.move.y
+        if self.map != None:
+            block_hit_list = pygame.sprite.spritecollide(self, self.map, False)
+            for block in block_hit_list:
+                if self.move.x > 0:
+                    self.rect.right = block.rect.left
+                elif self.move.x < 0:
+                    self.rect.left = block.rect.right
+                elif self.move.y > 0:
+                    self.rect.bottom = block.rect.top
+                elif self.move.y < 0:
+                    self.rect.top = block.rect.bottom
+        # move the player to the other side of the screen
+        if self.rect.x <= -5:
+            self.rect.x = width
+        if self.rect.x >= width+5:
+            self.rect.x = -5
+        # player eats fruit
+        if self.fruit != None:
+            hit_list = pygame.sprite.spritecollide(self, self.fruit, True)
+            for hit in hit_list:
+                self.score+=1
+        self.dirty = 1
 
-        # Did this update cause us to hit a wall?
-        block_hit_list = pygame.sprite.spritecollide(self, self.maps, False)
-        for block in block_hit_list:
-            # If we are moving right, set our right side to the left side of
-            # the item we hit
-            if self.change_x > 0:
-                self.rect.right = block.rect.left
-            else:
-                # Otherwise if we are moving left, do the opposite.
-                self.rect.left = block.rect.right
 
-        # Move up/down
-        self.rect.y += self.change_y
+    def _split_letters(self, word):
+        return [char for char in word]
 
-        # Check and see if we hit anything
-        block_hit_list = pygame.sprite.spritecollide(self, self.maps, False)
-        for block in block_hit_list:
-
-            # Reset our position based on the top/bottom of the object.
-            if self.change_y > 0:
-                self.rect.bottom = block.rect.top
-            else:
-                self.rect.top = block.rect.bottom
+    def _join_word(self, letters):
+        word = letters[0]
+        for i in range(1, len(letters)):
+            word += letters[i]
+        return word

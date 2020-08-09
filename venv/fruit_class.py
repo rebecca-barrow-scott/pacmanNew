@@ -6,6 +6,4 @@ class Fruit(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
         self.image.fill(color)
-        self.rect = self.image.get_rect()
-        self.rect.y = y
-        self.rect.x = x
+        self.rect = self.image.get_rect(center=(x, y))
