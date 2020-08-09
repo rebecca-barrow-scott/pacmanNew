@@ -1,7 +1,17 @@
 import pygame
 from settings import *
 from tile_class import *
+from fruit_class import *
+from bar_class import *
 class Map(pygame.sprite.Sprite):
+    """
+    Creates a Map
+        #-#--MAP KEY--#-#
+            w: wall
+            .: fruit
+            b: bar
+            e: empty
+        """
     def __init__(self, app):
         pygame.sprite.Sprite.__init__(self)
         self.app = app
@@ -36,14 +46,9 @@ wwwwwwwwwwwwwwwwwww"""
                 if letter == 'w':
                     tile = Tile(x*self.app.cell_width, y*self.app.cell_height, self.app.cell_width, self.app.cell_height, blue)
                     self.all_sprite_list.add(tile)
-                # if letter == 'b':
-                #     pygame.draw.line(self.app.background,
-                #                      ghost_pink,
-                #                      (x * self.app.cell_width, (y + 0.5) * self.app.cell_height),
-                #                      ((x + 1) * self.app.cell_width, (y + 0.5) * self.app.cell_height), 5)
-                # if letter == '.':
-                #
-                #     pygame.draw.circle(self.app.screen,
-                #                        white,
-                #                        (int((x + 1) * self.app.cell_width + self.app.cell_width // 2),
-                #                         int((y + 1) * self.app.cell_height + self.app.cell_height // 2)), 3)
+                if letter == 'b':
+                    bar = Bar(x*self.app.cell_width, y * self.app.cell_height + self.app.cell_height // 2, self.app.cell_width, self.app.cell_height // 5, ghost_pink)
+                    self.all_sprite_list.add(bar)
+                if letter == '.':
+                    fruit = Fruit(int(x*self.app.cell_width + self.app.cell_width//2), int(y*self.app.cell_height + self.app.cell_height//2), self.app.cell_width//5, self.app.cell_height//5, white)
+                    self.all_sprite_list.add(fruit)
