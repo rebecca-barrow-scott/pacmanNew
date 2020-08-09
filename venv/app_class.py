@@ -20,7 +20,7 @@ class App:
         self.map = Map(self)
         self.pacman = Player(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 11)+self.cell_height//2, self.cell_width, self.cell_height)
         self.red_ghost = Ghost(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 9)+self.cell_height//2, self.cell_width, self.cell_height, ghost_red)
-        self.pink_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink)
+        self.pink_ghost = Ghost(self, (self.cell_width * 8) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink)
         self.cyan_ghost = Ghost(self, (self.cell_width * 8) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_cyan)
         self.orange_ghost = Ghost(self, (self.cell_width * 10) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_orange)
         self.ghost_list = pygame.sprite.Group()
@@ -40,6 +40,10 @@ class App:
                 self.finish_events()
                 self.finish_update()
                 self.finish_draw()
+            elif self.state == 'game_over':
+                self.game_over_events()
+                self.game_over_update()
+                self.game_over_draw()
             else:
                 self.running = False
             self.clock.tick(fps)
@@ -125,7 +129,8 @@ class App:
 
         # DRAW TEXT
         self.draw_text('CURRENT SCORE: {score}'.format(score = self.pacman.score), [110, 15], intro_text_size_subtitle, white, intro_font)
-        self.draw_text('1 2 3', [width-110, 15], intro_text_size_subtitle, white, intro_font)
+        for i in range(0, self.pacman.lives):
+            self.draw_text('<3', [width-110+(i*30), 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
         # DRAW GHOSTS
         self.red_ghost.walls = self.map.wall_list
@@ -167,6 +172,33 @@ class App:
         self.draw_text('FINISHED', [width // 2, height // 2 - 97], intro_text_size_title, ghost_red,intro_font)
         self.draw_text('FINISHED', [width // 2 + 2, height // 2 - 100], intro_text_size_title, purple,intro_font)
         self.draw_text('FINISHED', [width // 2, height // 2 - 100], intro_text_size_title, pacman_yellow,intro_font)
+        self.draw_text('SCORE {score}'.format(score=self.pacman.score), [width // 2, height // 2], intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('SCORE {score}'.format(score=self.pacman.score), [width // 2, height // 2], intro_text_size_subtitle, ghost_pink, intro_font)
         self.draw_text('REBECCA BARROW-SCOTT', [width // 2, height - 40], intro_text_size, ghost_cyan, intro_font)
         self.draw_text('3815 ICT SOFTWARE ENGINEERING', [width // 2, height - 20], intro_text_size, blue, intro_font)
+        pygame.display.update()
+
+    # GAME OVER
+    def game_over_events(self):
+        for event in pygame.event.get():
+            # quit the game
+            if event.type == pygame.QUIT:
+                self.running = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                pass
+
+    def game_over_update(self):
+        pass
+
+    def game_over_draw(self):
+        self.screen.fill(black)
+        self.draw_text('GAME OVER', [width // 2, height // 2 - 97], intro_text_size_title, ghost_red, intro_font)
+        self.draw_text('GAME OVER', [width // 2 + 2, height // 2 - 100], intro_text_size_title, purple, intro_font)
+        self.draw_text('GAME OVER', [width // 2, height // 2 - 100], intro_text_size_title, pacman_yellow,intro_font)
+        self.draw_text('SCORE {score}'.format(score=self.pacman.score), [width // 2, height // 2 -49], intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('SCORE {score}'.format(score=self.pacman.score), [width // 2, height // 2 - 50], intro_text_size_subtitle, ghost_pink, intro_font)
+        self.draw_text('PRESS SPACE TO RETRY', [width // 2, height // 2+1],intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('PRESS SPACE TO RETRY', [width // 2, height // 2],intro_text_size_subtitle, ghost_pink, intro_font)
+        self.draw_text('REBECCA BARROW-SCOTT', [width // 2, height - 40], intro_text_size, ghost_cyan, intro_font)
+        self.draw_text('3815 ICT SOFTWARE ENGINEERING', [width // 2, height - 20], intro_text_size, blue,intro_font)
         pygame.display.update()

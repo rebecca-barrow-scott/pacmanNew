@@ -14,6 +14,7 @@ class Player(pygame.sprite.DirtySprite):
         self.fruit = None
         self.ghosts = None
         self.score = 0
+        self.lives = 3
         #self.stored_path = None
 
     def change_dir(self, x, y):
@@ -64,7 +65,13 @@ class Player(pygame.sprite.DirtySprite):
         if self.ghosts != None:
             hit_list = pygame.sprite.spritecollide(self, self.ghosts, True)
             for hit in hit_list:
-                self.app.state = "game_over"
+                if self.lives == 1:
+                    self.app.state = "game_over"
+                else:
+                    self.lives -= 1
+                    self.rect.x = self.app.cell_width*9
+                    self.rect.y = self.app.cell_height*11
+
 
 
         self.dirty = 1
