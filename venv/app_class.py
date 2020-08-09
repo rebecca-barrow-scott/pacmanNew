@@ -3,6 +3,7 @@ import sys
 
 from settings import *
 from map_class import *
+from player_class import *
 pygame.init()
 vector = pygame.math.Vector2
 
@@ -95,5 +96,4 @@ class App:
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
         self.map.draw()
         self.map.all_sprite_list.draw(self.background)
-
         pygame.display.update()
