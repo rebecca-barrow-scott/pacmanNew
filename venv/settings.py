@@ -22,5 +22,3 @@ purple = (113, 63, 159)
 hot_pink = (200, 67, 82)
 green = (73, 174, 138)
 blue = (73, 108, 174)
-#-#---PLAYER__#-#
-starting_pos = vector(9, 11)

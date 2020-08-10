@@ -10,8 +10,9 @@ class Map(pygame.sprite.Sprite):
             w: wall
             .: fruit
             b: bar
+            b: bar
             e: empty
-        """
+    """
     def __init__(self, app):
         pygame.sprite.Sprite.__init__(self)
         self.app = app
@@ -25,6 +26,7 @@ class Map(pygame.sprite.Sprite):
         for line in self.map_file:
             letters = self._split_line(line)
             x=0
+            # draw a sprite depending on the input from map.txt
             for letter in letters:
                 if letter == 'w':
                     tile = Tile(x*self.app.cell_width, y*self.app.cell_height, self.app.cell_width, self.app.cell_height, blue)
@@ -39,9 +41,7 @@ class Map(pygame.sprite.Sprite):
                     self.fruit_list.add(fruit)
                 x+=1
             y+=1
-            
-    def rewrite_map(self, new_map):
-        self.map = new_map
 
+    # splits a line/word into the letters
     def _split_line(self, line):
         return [char for char in line]

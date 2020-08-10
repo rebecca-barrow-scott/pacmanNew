@@ -3,20 +3,20 @@ from settings import *
 from map_class import *
 import pygame.gfxdraw
 class Player(pygame.sprite.DirtySprite):
+    "Create a player sprite"
     def __init__(self, app, x, y, width, height, color=pacman_yellow):
         pygame.sprite.DirtySprite.__init__(self)
         self.image = pygame.Surface([width, height], pygame.SRCALPHA)
-
         self.image.fill(color)
         # pygame.gfxdraw.aacircle(self.image,x, y, 5, blue)
         # pygame.gfxdraw.filled_circle(self.image, x, y, 5, blue)
         self.rect = self.image.get_rect(center=(x,y))
-
         self.move = vector(0, 0)
         self.app = app
         self.map = None
         self.fruit = None
         self.ghosts = None
+        # initialise player attributes
         self.score = 0
         self.lives = 3
         #self.stored_path = None
@@ -24,21 +24,19 @@ class Player(pygame.sprite.DirtySprite):
     def change_dir(self, x, y):
         self.move.x += x
         self.move.y += y
-        #self.stored_path = (x, y)
 
     def update(self):
         # move the player in the direction of the arrow key
         self.rect.x += self.move.x
-        if self.rect.x % self.app.cell_width == 0:
-            if self.move == vector(1, 0) or self.move == vector(-1, 0):
-                if self.stored_path is not None:
-                    self.move = self.stored_path
-        if self.rect.y % self.app.cell_height == 0:
-            if self.move == vector(0, 1) or self.move == vector(0, -1):
-                if self.stored_path is not None:
-                    self.move = self.stored_path
-
-
+        # if self.rect.x % self.app.cell_width == 0:
+        #     if self.move == vector(1, 0) or self.move == vector(-1, 0):
+        #         if self.stored_path is not None:
+        #             self.move = self.stored_path
+        # if self.rect.y % self.app.cell_height == 0:
+        #     if self.move == vector(0, 1) or self.move == vector(0, -1):
+        #         if self.stored_path is not None:
+        #             self.move = self.stored_path
+        # stop player from going through a wall
         if self.map != None:
             block_hit_list = pygame.sprite.spritecollide(self, self.map, False)
             for block in block_hit_list:
@@ -46,7 +44,7 @@ class Player(pygame.sprite.DirtySprite):
                     self.rect.right = block.rect.left
                 else:
                     self.rect.left = block.rect.right
-
+        # move player and stop them from going through a wall
         self.rect.y += self.move.y
         if self.map != None:
             block_hit_list = pygame.sprite.spritecollide(self, self.map, False)
@@ -75,17 +73,4 @@ class Player(pygame.sprite.DirtySprite):
                     self.lives -= 1
                     self.rect.x = self.app.cell_width*9
                     self.rect.y = self.app.cell_height*11
-
-
-
         self.dirty = 1
-
-
-    def _split_letters(self, word):
-        return [char for char in word]
-
-    def _join_word(self, letters):
-        word = letters[0]
-        for i in range(1, len(letters)):
-            word += letters[i]
-        return word

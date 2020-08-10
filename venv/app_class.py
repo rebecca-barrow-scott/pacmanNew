@@ -11,12 +11,14 @@ vector = pygame.math.Vector2
 
 class App:
     def __init__(self):
+        # set up initial parameters
         self.screen = pygame.display.set_mode((width, height))
         self.clock = pygame.time.Clock()
         self.running = True
         self.state = 'intro'
         self.cell_width = maze_width//19
         self.cell_height = maze_height//21
+        # set up sprites
         self.map = Map(self)
         self.pacman = Player(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 11)+self.cell_height//2, self.cell_width, self.cell_height)
         self.red_ghost = Ghost(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 9)+self.cell_height//2, self.cell_width, self.cell_height, ghost_red)
@@ -26,6 +28,7 @@ class App:
         self.ghost_list = pygame.sprite.Group()
         self.load()
 
+    # manage game events
     def run(self):
         while self.running:
             if self.state == 'intro':
@@ -51,6 +54,7 @@ class App:
         sys.exit()
 
     #-#-- HELPER FUNCTIONS --#-#
+    # draw text
     def draw_text(self, text, pos, font_size, color, font_name):
         font = pygame.font.SysFont(font_name, font_size)
         rend_text = font.render(text, False, color)
@@ -59,10 +63,11 @@ class App:
         pos[1] = pos[1] - text_size[1] // 2
         self.screen.blit(rend_text, pos)
 
+    # create playing field
     def load(self):
         self.background = pygame.Surface((maze_width, maze_height))
 
-
+    # draw grid, used for development
     # def draw_grid(self):
     #     for w in range(width//self.cell_width):
     #         pygame.draw.line(self.background, ghost_orange, (w*self.cell_width, 0), (w*self.cell_width, height))
@@ -80,6 +85,7 @@ class App:
 
     def intro_update(self): pass
 
+    # create intro screen
     def intro_draw(self):
         self.screen.fill(black)
         self.draw_text('WELCOME TO PACMAN', [width//2, height//2-97],intro_text_size_title, ghost_red, intro_font)
@@ -92,11 +98,13 @@ class App:
         pygame.display.update()
 
     # PLAYING
+    # manage playing events
     def playing_events(self):
         for event in pygame.event.get():
             # quit the game
             if event.type == pygame.QUIT:
                 self.running = False
+            # player movement
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     self.pacman.change_dir(-2, 0)
@@ -117,16 +125,15 @@ class App:
                 elif event.key == pygame.K_DOWN:
                     self.pacman.change_dir(0, -2)
 
+    # update pacman and ghost movements
     def playing_update(self):
         self.pacman.update()
-        self.red_ghost.update()
 
     # creates the playing screen
     def playing_draw(self):
         # DRAW BACKGROUND
         self.screen.fill(black)
         self.screen.blit(self.background, (border_padding//2, border_padding//2))
-
         # DRAW TEXT
         self.draw_text('CURRENT SCORE: {score}'.format(score = self.pacman.score), [110, 15], intro_text_size_subtitle, white, intro_font)
         for i in range(0, self.pacman.lives):
@@ -154,6 +161,7 @@ class App:
         self.pacman.ghosts = self.ghost_list
         self.map.all_sprite_list.add(self.pacman)
         # self.draw_grid()
+        # DRAW SPRITES ONTO THE BACKGROUND
         self.background.fill(black)
         self.map.all_sprite_list.draw(self.background)
         if len(self.map.fruit_list) == 0:
@@ -161,12 +169,14 @@ class App:
         pygame.display.flip()
 
     # FINISH
+    # Manage finish events
     def finish_events(self):
         for event in pygame.event.get():
             # quit the game
             if event.type == pygame.QUIT:
                 self.running = False
     def finish_update(self): pass
+    # Draw finish screen
     def finish_draw(self):
         self.screen.fill(black)
         self.draw_text('FINISHED', [width // 2, height // 2 - 97], intro_text_size_title, ghost_red,intro_font)
@@ -179,6 +189,7 @@ class App:
         pygame.display.update()
 
     # GAME OVER
+    # manage game over events
     def game_over_events(self):
         for event in pygame.event.get():
             # quit the game
@@ -187,9 +198,9 @@ class App:
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
                 pass
 
-    def game_over_update(self):
-        pass
+    def game_over_update(self): pass
 
+    # draw game over screen
     def game_over_draw(self):
         self.screen.fill(black)
         self.draw_text('GAME OVER', [width // 2, height // 2 - 97], intro_text_size_title, ghost_red, intro_font)

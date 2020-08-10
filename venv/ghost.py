@@ -2,6 +2,7 @@ import pygame
 import random
 from settings import *
 class Ghost(pygame.sprite.Sprite):
+    "Create a ghost srpite"
     def __init__(self, app, x, y, width, height, color, personality="random"):
         pygame.sprite.Sprite.__init__(self)
         self.image = pygame.Surface([width, height])
@@ -9,12 +10,12 @@ class Ghost(pygame.sprite.Sprite):
         self.app = app
         self.rect = self.image.get_rect(center=(x, y))
         self.move = vector(0, -1)
-        # self.prev_pos = vector(x, y)
         self.walls = None
         self.personality = personality
 
     def update(self):
         self.rect.x += self.move.x
+        # if the ghost hits a left or right wall, change the y direction
         if self.walls != None:
             block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
             for block in block_hit_list:
@@ -27,6 +28,7 @@ class Ghost(pygame.sprite.Sprite):
                     self.move.y = random.choice([-1, 1])
                     self.move.x = 0
 
+        # if the ghost hits a top or bottom wall, change the x direction
         self.rect.y += self.move.y
         if self.walls != None:
             block_hit_list = pygame.sprite.spritecollide(self, self.walls, False)
