@@ -20,9 +20,9 @@ class App:
         self.map = Map(self)
         self.pacman = Player(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 11)+self.cell_height//2, self.cell_width, self.cell_height)
         self.red_ghost = Ghost(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 9)+self.cell_height//2, self.cell_width, self.cell_height, ghost_red)
-        self.pink_ghost = Ghost(self, (self.cell_width * 8) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink)
-        self.cyan_ghost = Ghost(self, (self.cell_width * 8) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_cyan)
-        self.orange_ghost = Ghost(self, (self.cell_width * 10) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_orange)
+        self.pink_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink)
+        self.cyan_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_cyan)
+        self.orange_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_orange)
         self.ghost_list = pygame.sprite.Group()
         self.load()
 
@@ -132,6 +132,9 @@ class App:
         for i in range(0, self.pacman.lives):
             self.draw_text('<3', [width-110+(i*30), 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
+        # DRAW MAP
+        self.map.draw()
+        self.map.all_sprite_list.update()
         # DRAW GHOSTS
         self.red_ghost.walls = self.map.wall_list
         self.pink_ghost.walls = self.map.wall_list
@@ -150,11 +153,8 @@ class App:
         self.pacman.fruit = self.map.fruit_list
         self.pacman.ghosts = self.ghost_list
         self.map.all_sprite_list.add(self.pacman)
-        # DRAW MAP
-        self.map.draw()
-        self.map.all_sprite_list.update()
-        self.background.fill(black)
         # self.draw_grid()
+        self.background.fill(black)
         self.map.all_sprite_list.draw(self.background)
         if len(self.map.fruit_list) == 0:
             self.state='finish'

@@ -1,13 +1,17 @@
 import pygame
 from settings import *
 from map_class import *
-
+import pygame.gfxdraw
 class Player(pygame.sprite.DirtySprite):
     def __init__(self, app, x, y, width, height, color=pacman_yellow):
         pygame.sprite.DirtySprite.__init__(self)
-        self.image = pygame.Surface([width, height])
+        self.image = pygame.Surface([width, height], pygame.SRCALPHA)
+
         self.image.fill(color)
+        # pygame.gfxdraw.aacircle(self.image,x, y, 5, blue)
+        # pygame.gfxdraw.filled_circle(self.image, x, y, 5, blue)
         self.rect = self.image.get_rect(center=(x,y))
+
         self.move = vector(0, 0)
         self.app = app
         self.map = None
