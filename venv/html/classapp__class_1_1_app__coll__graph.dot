@@ -1,0 +1,7 @@
+digraph "app_class.App"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="{app_class.App\n|+ screen\l+ clock\l+ running\l+ state\l+ cell_width\l+ cell_height\l+ map\l+ pacman\l+ red_ghost\l+ pink_ghost\l+ cyan_ghost\l+ orange_ghost\l+ ghost_list\l+ background\l|+ __init__()\l+ run()\l+ draw_text()\l+ load()\l+ intro_events()\l+ intro_update()\l+ intro_draw()\l+ playing_events()\l+ playing_update()\l+ playing_draw()\land 6 more...\l}",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+}
