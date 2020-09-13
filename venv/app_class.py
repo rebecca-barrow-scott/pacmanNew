@@ -1,4 +1,5 @@
 import pygame
+import tkinter
 import sys
 import random
 
@@ -35,10 +36,18 @@ class App:
                 self.intro_events()
                 self.intro_update()
                 self.intro_draw()
-            elif self.state == 'playing':
+            elif self.state == 'playing_square':
                 self.playing_events()
                 self.playing_update()
-                self.playing_draw()
+                self.playing_draw('square')
+            elif self.state == 'playing_hex':
+                self.playing_events()
+                self.playing_update()
+                self.playing_draw('hex')
+            elif self.state == 'playing_top':
+                self.playing_events()
+                self.playing_update()
+                self.playing_draw('top')
             elif self.state == 'finish':
                 self.finish_events()
                 self.finish_update()
@@ -80,8 +89,12 @@ class App:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.running = False
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
-                self.state = 'playing'
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_s:
+                self.state = 'playing_square'
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_h:
+                self.state = 'playing_hex'
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_t:
+                self.state = 'playing_top'
 
     def intro_update(self): pass
 
@@ -91,8 +104,12 @@ class App:
         self.draw_text('WELCOME TO PACMAN', [width//2, height//2-97],intro_text_size_title, ghost_red, intro_font)
         self.draw_text('WELCOME TO PACMAN', [width//2+2, height//2-100],intro_text_size_title, purple, intro_font)
         self.draw_text('WELCOME TO PACMAN',  [width//2, height//2-100],intro_text_size_title, pacman_yellow, intro_font)
-        self.draw_text('PRESS SPACEBAR TO START', [width//2+1, height//2-49],intro_text_size_subtitle, hot_pink, intro_font)
-        self.draw_text('PRESS SPACEBAR TO START', [width//2, height//2-50],intro_text_size_subtitle, ghost_pink, intro_font)
+        self.draw_text('PRESS \'S\' TO START SQUARE GRID', [width//2+1, height//2-49],intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('PRESS \'S\' TO START SQUARE GRID', [width//2, height//2-50],intro_text_size_subtitle, ghost_pink, intro_font)
+        self.draw_text('PRESS \'H\' TO START HEXAGONAL GRID', [width//2+1, height//2-19],intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('PRESS \'H\' TO START HEXAGONAL GRID', [width//2, height//2-20],intro_text_size_subtitle, ghost_pink, intro_font)
+        self.draw_text('PRESS \'T\' TO START TOPOLOGICAL GRAPH', [width//2+1, height//2+9],intro_text_size_subtitle, hot_pink, intro_font)
+        self.draw_text('PRESS \'T\' TO START TOPOLOGICAL GRAPH', [width//2, height//2+10],intro_text_size_subtitle, ghost_pink, intro_font)
         self.draw_text('REBECCA BARROW-SCOTT', [width//2, height-40],intro_text_size, ghost_cyan, intro_font)
         self.draw_text('3815 ICT SOFTWARE ENGINEERING', [width//2, height-20],intro_text_size, blue, intro_font)
         pygame.display.update()
@@ -130,7 +147,7 @@ class App:
         self.pacman.update()
 
     # creates the playing screen
-    def playing_draw(self):
+    def playing_draw(self, map_type):
         # DRAW BACKGROUND
         self.screen.fill(black)
         self.screen.blit(self.background, (border_padding//2, border_padding//2))
@@ -139,33 +156,39 @@ class App:
         for i in range(0, self.pacman.lives):
             self.draw_text('<3', [width-110+(i*30), 15], intro_text_size_subtitle, white, intro_font)
         self.draw_text('3815 ICT MILESTONE 1: PROTOTYPE', [width//2, height-13], intro_text_size, hot_pink, intro_font)
-        # DRAW MAP
-        self.map.draw()
-        self.map.all_sprite_list.update()
-        # DRAW GHOSTS
-        self.red_ghost.walls = self.map.wall_list
-        self.pink_ghost.walls = self.map.wall_list
-        self.cyan_ghost.walls = self.map.wall_list
-        self.orange_ghost.walls = self.map.wall_list
-        self.ghost_list.add(self.red_ghost)
-        self.ghost_list.add(self.pink_ghost)
-        self.ghost_list.add(self.cyan_ghost)
-        self.ghost_list.add(self.orange_ghost)
-        self.map.all_sprite_list.add(self.red_ghost)
-        self.map.all_sprite_list.add(self.pink_ghost)
-        self.map.all_sprite_list.add(self.cyan_ghost)
-        self.map.all_sprite_list.add(self.orange_ghost)
-        # DRAW PLAYER
-        self.pacman.map = self.map.wall_list
-        self.pacman.fruit = self.map.fruit_list
-        self.pacman.ghosts = self.ghost_list
-        self.map.all_sprite_list.add(self.pacman)
-        # self.draw_grid()
-        # DRAW SPRITES ONTO THE BACKGROUND
-        self.background.fill(black)
-        self.map.all_sprite_list.draw(self.background)
-        if len(self.map.fruit_list) == 0:
-            self.state='finish'
+        if map_type == 'square':
+            # DRAW MAP
+            self.map.draw(map_type)
+            self.map.all_sprite_list.update()
+            # DRAW GHOSTS
+            self.red_ghost.walls = self.map.wall_list
+            self.pink_ghost.walls = self.map.wall_list
+            self.cyan_ghost.walls = self.map.wall_list
+            self.orange_ghost.walls = self.map.wall_list
+            self.ghost_list.add(self.red_ghost)
+            self.ghost_list.add(self.pink_ghost)
+            self.ghost_list.add(self.cyan_ghost)
+            self.ghost_list.add(self.orange_ghost)
+            self.map.all_sprite_list.add(self.red_ghost)
+            self.map.all_sprite_list.add(self.pink_ghost)
+            self.map.all_sprite_list.add(self.cyan_ghost)
+            self.map.all_sprite_list.add(self.orange_ghost)
+            # DRAW PLAYER
+            self.pacman.map = self.map.wall_list
+            self.pacman.fruit = self.map.fruit_list
+            self.pacman.ghosts = self.ghost_list
+            self.map.all_sprite_list.add(self.pacman)
+            # self.draw_grid()
+            # DRAW SPRITES ONTO THE BACKGROUND
+            self.background.fill(black)
+            self.map.all_sprite_list.draw(self.background)
+            if len(self.map.fruit_list) == 0:
+                self.state='finish'
+        elif map_type == "hex":
+            self.map.draw(map_type)
+        elif map_type == "top":
+            self.draw_text('TOP MAP', [height // 2, width // 2], intro_text_size_subtitle, blue, intro_font)
+
         pygame.display.flip()
 
     # FINISH
