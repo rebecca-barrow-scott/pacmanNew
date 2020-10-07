@@ -5,6 +5,8 @@ from settings import *
 from tile_class import *
 from fruit_class import *
 from bar_class import *
+from special_class import *
+
 class Map(pygame.sprite.Sprite):
     """
     Creates a Map
@@ -14,6 +16,7 @@ class Map(pygame.sprite.Sprite):
             b: bar
             b: bar
             e: empty
+            s: special
     """
     def __init__(self, app):
         pygame.sprite.Sprite.__init__(self)
@@ -21,7 +24,9 @@ class Map(pygame.sprite.Sprite):
         self.all_sprite_list = pygame.sprite.Group()
         self.wall_list = pygame.sprite.Group()
         self.fruit_list = pygame.sprite.Group()
+        self.special_list = pygame.sprite.Group()
         self.map_file = open("E:\\2020\Trimester 2\\3815ICT Software Engineering\\milestone2\\pacman\\pacmanNew\\venv\\map.txt", 'r')
+        self.top_map = open("E:\\2020\Trimester 2\\3815ICT Software Engineering\\milestone2\\pacman\\pacmanNew\\venv\\top_file.txt", 'r')
 
     def draw(self, map_type):
         if map_type == 'square':
@@ -38,6 +43,10 @@ class Map(pygame.sprite.Sprite):
                     if letter == 'b':
                         bar = Bar(x*self.app.cell_width, y * self.app.cell_height + self.app.cell_height // 2, self.app.cell_width, self.app.cell_height // 5, ghost_pink)
                         self.all_sprite_list.add(bar)
+                    if letter == 's':
+                        special = Special(int(x*self.app.cell_width + self.app.cell_width//5), int(y*self.app.cell_height + self.app.cell_height//5), self.app.cell_width//2, self.app.cell_height//2, ghost_red)
+                        self.all_sprite_list.add(special)
+                        self.special_list.add(special)
                     if letter == '.':
                         fruit = Fruit(int(x*self.app.cell_width + self.app.cell_width//2), int(y*self.app.cell_height + self.app.cell_height//2), self.app.cell_width//5, self.app.cell_height//5, white)
                         self.all_sprite_list.add(fruit)
@@ -63,10 +72,24 @@ class Map(pygame.sprite.Sprite):
                 current_x = maze_width / 2.0 - grid_x_pixels / 2.0
                 current_y += sep_y
 
-
-
         elif map_type == 'top':
-            pass
+            x, y = 0, 0
+            for line in self.top_map:
+                letters = self._split_line(line)
+                x = 0
+                # draw a sprite depending on the input from map.txt
+                for letter in letters:
+                    if letter == 'w':
+                        tile = Tile(x * self.app.cell_width, y * self.app.cell_height, self.app.cell_width,
+                                    self.app.cell_height, blue)
+                        self.all_sprite_list.add(tile)
+                        self.wall_list.add(tile)
+                    if letter == '.':
+                        fruit = Fruit(int(x*self.app.cell_width + self.app.cell_width//2), int(y*self.app.cell_height + self.app.cell_height//2), self.app.cell_width//5, self.app.cell_height//5, white)
+                        self.all_sprite_list.add(fruit)
+                        self.fruit_list.add(fruit)
+                    x += 1
+                y += 1
 
     # splits a line/word into the letters
     def _split_line(self, line):

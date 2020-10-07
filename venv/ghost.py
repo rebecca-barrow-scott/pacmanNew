@@ -12,6 +12,8 @@ class Ghost(pygame.sprite.Sprite):
         self.move = vector(0, -1)
         self.walls = None
         self.personality = personality
+        self.state = 'normal'
+        self.color = color
 
     def update(self):
         self.rect.x += self.move.x
@@ -41,3 +43,11 @@ class Ghost(pygame.sprite.Sprite):
                     self.rect.top = block.rect.bottom
                     self.move.x = random.choice([-1, 1])
                     self.move.y = 0
+
+    def change_state(self):
+        if self.state == 'normal':
+            self.state = 'reversed'
+            self.image.fill(dark_blue)
+        elif self.state == 'reversed':
+            self.state = 'normal'
+            self.image.fill(self.color)

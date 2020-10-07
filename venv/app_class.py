@@ -142,6 +142,15 @@ class App:
                 elif event.key == pygame.K_DOWN:
                     self.pacman.change_dir(0, -2)
 
+            if self.pacman.state == 'reversed':
+                self.pacman.score += 10
+                self.red_ghost.change_state()
+                self.pink_ghost.change_state()
+                self.cyan_ghost.change_state()
+                self.orange_ghost.change_state()
+
+
+
     # update pacman and ghost movements
     def playing_update(self):
         self.pacman.update()
@@ -176,6 +185,7 @@ class App:
             # DRAW PLAYER
             self.pacman.map = self.map.wall_list
             self.pacman.fruit = self.map.fruit_list
+            self.pacman.special = self.map.special_list
             self.pacman.ghosts = self.ghost_list
             self.map.all_sprite_list.add(self.pacman)
             # self.draw_grid()
@@ -187,8 +197,39 @@ class App:
         elif map_type == "hex":
             self.map.draw(map_type)
         elif map_type == "top":
-            self.draw_text('TOP MAP', [height // 2, width // 2], intro_text_size_subtitle, blue, intro_font)
-
+            # MAP
+            self.map.draw(map_type)
+            self.map.all_sprite_list.update()
+            # DRAW GHOSTS
+            self.red_ghost.walls = self.map.wall_list
+            self.pink_ghost.walls = self.map.wall_list
+            self.cyan_ghost.walls = self.map.wall_list
+            self.orange_ghost.walls = self.map.wall_list
+            self.ghost_list.add(self.red_ghost)
+            self.ghost_list.add(self.pink_ghost)
+            self.ghost_list.add(self.cyan_ghost)
+            self.ghost_list.add(self.orange_ghost)
+            self.map.all_sprite_list.add(self.red_ghost)
+            self.map.all_sprite_list.add(self.pink_ghost)
+            self.map.all_sprite_list.add(self.cyan_ghost)
+            self.map.all_sprite_list.add(self.orange_ghost)
+            # PACMAN
+            self.pacman.map = self.map.wall_list
+            self.pacman.fruit = self.map.fruit_list
+            self.map.all_sprite_list.add(self.pacman)
+            self.background.fill(black)
+            self.map.all_sprite_list.draw(self.background)
+            self.map.all_sprite_list.draw(self.background)
+            # DRAW LINE
+            pygame.draw.line(self.background, green, [self.pacman.rect.x + self.cell_width//2, self.pacman.rect.y + self.cell_height//2], [self.red_ghost.rect.x + self.cell_width//2, self.red_ghost.rect.y + self.cell_height//2])
+            pygame.draw.line(self.background, green, [self.pacman.rect.x + self.cell_width//2, self.pacman.rect.y + self.cell_height//2],
+                             [self.cyan_ghost.rect.x + self.cell_width//2, self.cyan_ghost.rect.y + self.cell_height//2])
+            pygame.draw.line(self.background, green, [self.pacman.rect.x + self.cell_width//2, self.pacman.rect.y + self.cell_height//2],
+                             [self.pink_ghost.rect.x + self.cell_width//2, self.pink_ghost.rect.y + self.cell_height//2])
+            pygame.draw.line(self.background, green, [self.pacman.rect.x + self.cell_width//2, self.pacman.rect.y + self.cell_height//2],
+                             [self.orange_ghost.rect.x + self.cell_width//2, self.orange_ghost.rect.y + self.cell_height//2])
+            if len(self.map.fruit_list) == 0:
+                self.state = 'finish'
         pygame.display.flip()
 
     # FINISH
@@ -198,6 +239,11 @@ class App:
             # quit the game
             if event.type == pygame.QUIT:
                 self.running = False
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.state = 'intro'
+                self.map.fruit_list = 0;
+
+
     def finish_update(self): pass
     # Draw finish screen
     def finish_draw(self):
