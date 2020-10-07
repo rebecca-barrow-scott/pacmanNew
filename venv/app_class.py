@@ -22,10 +22,10 @@ class App:
         # set up sprites
         self.map = Map(self)
         self.pacman = Player(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 11)+self.cell_height//2, self.cell_width, self.cell_height)
-        self.red_ghost = Ghost(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 9)+self.cell_height//2, self.cell_width, self.cell_height, ghost_red)
-        self.pink_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink)
-        self.cyan_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_cyan)
-        self.orange_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_orange)
+        self.red_ghost = Ghost(self, (self.cell_width * 9)+self.cell_width//2, (self.cell_height * 9)+self.cell_height//2, self.cell_width, self.cell_height, ghost_red, self.pacman)
+        self.pink_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_pink, self.pacman)
+        self.cyan_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_cyan, self.pacman)
+        self.orange_ghost = Ghost(self, (self.cell_width * 9) + self.cell_width // 2, (self.cell_height * 9) + self.cell_height // 2, self.cell_width, self.cell_height, ghost_orange, self.pacman)
         self.ghost_list = pygame.sprite.Group()
         self.load()
 

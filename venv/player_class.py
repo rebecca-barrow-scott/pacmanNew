@@ -43,8 +43,6 @@ class Player(pygame.sprite.DirtySprite):
         if self.map != None:
             block_hit_list = pygame.sprite.spritecollide(self, self.map, False)
             for block in block_hit_list:
-                print("block ")
-                print(block)
                 if self.move.y > 0:
                     self.rect.bottom = block.rect.top
                 else:
@@ -58,23 +56,17 @@ class Player(pygame.sprite.DirtySprite):
         if self.fruit != None:
             hit_list = pygame.sprite.spritecollide(self, self.fruit, True)
             for hit in hit_list:
-                print("fruit ")
-                print(hit)
                 self.score+=1
 
         # player collides with special
         if self.special != None:
             hit_list = pygame.sprite.spritecollide(self, self.special, True)
             for hit in hit_list:
-                print("special ")
-                print(hit)
                 self.state = 'reversed'
         # player collides with ghost
         if self.ghosts != None:
             hit_list = pygame.sprite.spritecollide(self, self.ghosts, True)
             for hit in hit_list:
-                print("ghost ")
-                print(hit)
                 if self.state == 'reversed':
                     self.score += 100
                     self.rect.x = self.app.cell_width * 9
@@ -84,7 +76,8 @@ class Player(pygame.sprite.DirtySprite):
                     if self.lives == 1:
                         self.app.state = "game_over"
                     else:
-                        self.lives -= 1
-                        self.rect.x = self.app.cell_width*9
-                        self.rect.y = self.app.cell_height*11
+                        pass
+                        # self.lives -= 1
+                        # self.rect.x = self.app.cell_width*9
+                        # self.rect.y = self.app.cell_height*11
         self.dirty = 1
