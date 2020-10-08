@@ -54,20 +54,45 @@ class Map(pygame.sprite.Sprite):
                     x+=1
                 y+=1
         elif map_type == 'hex':
+            x, y = 0, 0
+            for line in self.top_map:
+                letters = self._split_line(line)
+                x = 0
+                # draw a sprite depending on the input from map.txt
+                for letter in letters:
+                    if letter == 'w':
+                        tile = Tile(x * self.app.cell_width, y * self.app.cell_height, self.app.cell_width,
+                                    self.app.cell_height, blue)
+                        self.all_sprite_list.add(tile)
+                        self.wall_list.add(tile)
+                    if letter == '.':
+                        fruit = Fruit(int(x * self.app.cell_width + self.app.cell_width // 2),
+                                      int(y * self.app.cell_height + self.app.cell_height // 2),
+                                      self.app.cell_width // 5, self.app.cell_height // 5, white)
+                        self.all_sprite_list.add(fruit)
+                        self.fruit_list.add(fruit)
+                    x += 1
+                y += 1
+
             hex_size = 20
-            grid_x_pixels = .9 * maze_width
-            grid_y_pixels = .9 + maze_height
+            grid_x_pixels = 0.9 * maze_width
+            grid_y_pixels = 0.9 + maze_height
             sep_x = 3 * hex_size
             sep_y = 0.86 * hex_size
             grid_x = int(grid_x_pixels / sep_x) + 1
             grid_y = int(grid_y_pixels / sep_y) + 1
             current_x = int(maze_width/2.0 - grid_x_pixels/2.0)
             current_y = int(maze_height/2.0 - grid_y_pixels/2.0)
+            skip = 1
             for i in range(grid_y):
                 if i%2 == 0:
                     current_x = 2.7 * hex_size
                 for j in range(grid_x):
-                    self.draw_hexagon(current_x, current_y, hex_size)
+                    if skip == 7:
+                        self.draw_hexagon(current_x, current_y, hex_size)
+                        skip = 1
+                    else:
+                        skip += 1
                     current_x += sep_x
                 current_x = maze_width / 2.0 - grid_x_pixels / 2.0
                 current_y += sep_y
@@ -99,26 +124,38 @@ class Map(pygame.sprite.Sprite):
         x = int(x)
         y = int(y)
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                          # 1
                          [x + side * math.sin(math.pi / 2), y + side * math.cos(math.pi / 2)],
+                         # 2
                          [x + side * math.sin(math.pi / 6), y + side * math.cos(math.pi / 6)])
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                          # 2
                          [x + side * math.sin(math.pi / 6), y + side * math.cos(math.pi / 6)],
+                          # 3
                          [x + side * math.sin(11 * math.pi / 6), y + side * math.cos(11 * math.pi / 6)])
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                         # 3
                          [x + side * math.sin(11 * math.pi / 6), y + side * math.cos(11 * math.pi / 6)],
+                         # 4
                          [x + side * math.sin(3 * math.pi / 2), y + side * math.cos(3 * math.pi / 2)])
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                         # 4
                          [x + side * math.sin(3 * math.pi / 2), y + side * math.cos(3 * math.pi / 2)],
+                         # 5
                          [x + side * math.sin(7 * math.pi / 6), y + side * math.cos(7 * math.pi / 6)])
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                         # 5
                          [x + side * math.sin(7 * math.pi / 6), y + side * math.cos(7 * math.pi / 6)],
+                         # 6
                          [x + side * math.sin(5 * math.pi / 6), y + side * math.cos(5 * math.pi / 6)])
         pygame.draw.line(self.app.background,
-                         ghost_orange,
+                         grey,
+                         # 6
                          [x + side * math.sin(5 * math.pi / 6), y + side * math.cos(5 * math.pi / 6)],
+                         # 1
                          [x + side * math.sin(math.pi / 2), y + side * math.cos(math.pi / 2)])

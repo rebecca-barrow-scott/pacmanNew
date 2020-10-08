@@ -195,7 +195,30 @@ class App:
             if len(self.map.fruit_list) == 0:
                 self.state='finish'
         elif map_type == "hex":
+            # DRAW GHOSTS
+            self.red_ghost.walls = self.map.wall_list
+            self.pink_ghost.walls = self.map.wall_list
+            self.cyan_ghost.walls = self.map.wall_list
+            self.orange_ghost.walls = self.map.wall_list
+            self.ghost_list.add(self.red_ghost)
+            self.ghost_list.add(self.pink_ghost)
+            self.ghost_list.add(self.cyan_ghost)
+            self.ghost_list.add(self.orange_ghost)
+            self.map.all_sprite_list.add(self.red_ghost)
+            self.map.all_sprite_list.add(self.pink_ghost)
+            self.map.all_sprite_list.add(self.cyan_ghost)
+            self.map.all_sprite_list.add(self.orange_ghost)
+            # PACMAN
+            self.pacman.map = self.map.wall_list
+            self.pacman.fruit = self.map.fruit_list
+            self.pacman.ghosts = self.ghost_list
+            self.map.all_sprite_list.add(self.pacman)
+            self.background.fill(black)
+            # MAP
             self.map.draw(map_type)
+            self.map.all_sprite_list.update()
+            self.map.all_sprite_list.draw(self.background)
+            self.map.all_sprite_list.draw(self.background)
         elif map_type == "top":
             # MAP
             self.map.draw(map_type)
@@ -216,6 +239,7 @@ class App:
             # PACMAN
             self.pacman.map = self.map.wall_list
             self.pacman.fruit = self.map.fruit_list
+            self.pacman.ghosts = self.ghost_list
             self.map.all_sprite_list.add(self.pacman)
             self.background.fill(black)
             self.map.all_sprite_list.draw(self.background)
