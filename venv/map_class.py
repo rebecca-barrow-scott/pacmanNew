@@ -6,6 +6,7 @@ from tile_class import *
 from fruit_class import *
 from bar_class import *
 from special_class import *
+from hexagon_class import *
 
 class Map(pygame.sprite.Sprite):
     """
@@ -83,19 +84,19 @@ class Map(pygame.sprite.Sprite):
             grid_y = int(grid_y_pixels / sep_y) + 1
             current_x = int(maze_width/2.0 - grid_x_pixels/2.0)
             current_y = int(maze_height/2.0 - grid_y_pixels/2.0)
-            skip = 1
             for i in range(grid_y):
                 if i%2 == 0:
                     current_x = 2.7 * hex_size
                 for j in range(grid_x):
-                    if skip == 7:
-                        self.draw_hexagon(current_x, current_y, hex_size)
-                        skip = 1
-                    else:
-                        skip += 1
+                    self.draw_hexagon(current_x, current_y, hex_size)
                     current_x += sep_x
                 current_x = maze_width / 2.0 - grid_x_pixels / 2.0
                 current_y += sep_y
+            hex = Hexagon(100, 100)
+            self.all_sprite_list.add(hex)
+            self.wall_list.add(hex)
+
+
 
         elif map_type == 'top':
             x, y = 0, 0
@@ -125,10 +126,11 @@ class Map(pygame.sprite.Sprite):
         y = int(y)
         pygame.draw.line(self.app.background,
                          grey,
-                          # 1
+                           # 1
                          [x + side * math.sin(math.pi / 2), y + side * math.cos(math.pi / 2)],
-                         # 2
+                          # 2
                          [x + side * math.sin(math.pi / 6), y + side * math.cos(math.pi / 6)])
+
         pygame.draw.line(self.app.background,
                          grey,
                           # 2
