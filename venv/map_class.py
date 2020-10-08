@@ -92,9 +92,28 @@ class Map(pygame.sprite.Sprite):
                     current_x += sep_x
                 current_x = maze_width / 2.0 - grid_x_pixels / 2.0
                 current_y += sep_y
-            hex = Hexagon(100, 100)
-            self.all_sprite_list.add(hex)
-            self.wall_list.add(hex)
+            for x in range(0, 2):
+                for y in range(0, 4):
+                    hex = Hexagon((x*240)+113, 103)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
+                    hex = Hexagon((x*240)+143, 86)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
+
+                    hex = Hexagon(113, (y*103)+103)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
+                    hex = Hexagon(143, (y*103)+86)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
+
+                    hex = Hexagon((x*240)+113, (y * 103) + 103)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
+                    hex = Hexagon((x*240)+143, (y * 103) + 86)
+                    self.all_sprite_list.add(hex)
+                    self.wall_list.add(hex)
 
 
 

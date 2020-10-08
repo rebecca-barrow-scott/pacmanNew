@@ -18,7 +18,7 @@ class Ghost(pygame.sprite.Sprite):
         self.pacman = pacman
 
     def update(self):
-        if self.app.state == 'playing_top':
+        if self.app.state == 'playing_top' or self.app.state == 'playing_hex':
             # if the ghost hits a left or right wall, change the y direction
             if self.rect.x >= self.pacman.rect.x:
                 self.move.x = -1
